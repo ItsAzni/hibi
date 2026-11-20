@@ -6,17 +6,21 @@ class LocalStorageService {
   static const String _tasksKey = 'tasks';
 
   Future<List<Task>> getTasks() async {
-    final prefs = await SharedPreferences.getInstance();
+    try {
+      final prefs = await SharedPreferences.getInstance();
 
-    final String? data = prefs.getString(_tasksKey);
+      final String? data = prefs.getString(_tasksKey);
 
-    if (data == null) return [];
+      if (data == null || data.isEmpty) return [];
 
-    final List<dynamic> decoded = jsonDecode(data);
+      final List<dynamic> decoded = jsonDecode(data);
 
-    return decoded
-        .map((item) => Task.fromMap(item))
-        .toList();
+      return decoded
+          .map((item) => Task.fromMap(Map<String, dynamic>.from(item as Map)))
+          .toList();
+    } catch (_) {
+      return [];
+    }
   }
 
   Future<void> saveTasks(List<Task> tasks) async {

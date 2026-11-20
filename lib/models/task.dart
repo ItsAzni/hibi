@@ -38,19 +38,21 @@ class Task {
       'title': title,
       'note': note,
       'completed': completed,
-      'createdAt': createdAt,
-      'completedAt': completedAt,
+      'createdAt': createdAt.toIso8601String(),
+      'completedAt': completedAt?.toIso8601String(),
     };
   }
 
   factory Task.fromMap(Map<String, dynamic> map) {
     return Task(
-      id: map['id'],
-      title: map['title'],
-      note: map['note'],
-      completed: map['completed'] ?? false,
-      createdAt: DateTime.parse(map['createdAt']),
-      completedAt: map['completedAt'] != null ? DateTime.parse(map['completedAt']) : null
+      id: map['id'] as String,
+      title: map['title'] as String,
+      note: map['note'] as String?,
+      completed: map['completed'] as bool? ?? false,
+      createdAt: DateTime.parse(map['createdAt'] as String),
+      completedAt: map['completedAt'] != null
+          ? DateTime.parse(map['completedAt'] as String)
+          : null,
     );
   }
 }
